@@ -50,7 +50,7 @@ public class StopServiсe {
             stop = new Stop();
         }
         stop.setDescription(request.getDescription());
-        stop.setMinWaite(request.getMinWaite());
+        stop.setWaitTime(request.getWaitTime());
         stop.setAddress(addressService.findOne(request.getAddressId()));
         return stop;
     }

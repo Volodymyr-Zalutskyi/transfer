@@ -14,6 +14,7 @@ import java.util.List;
 import static volodymyr.zalutskyi.transfer.tool.Constants.BOOKING_URL;
 import static volodymyr.zalutskyi.transfer.tool.Constants.PAGE_URL;
 
+@CrossOrigin
 @RestController
 @RequestMapping(BOOKING_URL)
 public class CabOrderController {

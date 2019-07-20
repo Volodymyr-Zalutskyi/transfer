@@ -75,7 +75,7 @@ public class CabOrderServiсe {
         }
             cabOrder.setDatePickup(request.getDatePickup());
             cabOrder.setTimePickup(request.getTimePickup());
-            cabOrder.setMinDrive(request.getMinDrive());
+            cabOrder.setDriveTime(request.getDriveTime());
 
             if(!isAvailableOnDate(request.getCabId(), request.getDatePickup(), request.getTimePickup())) {
                throw new IllegalArgumentException("Cab order with this date and time are exists");
@@ -95,10 +95,10 @@ public class CabOrderServiсe {
 
     private LocalDateTime calculateEndTime(CabOrder cabOrder) {
         Integer awaitTimeOnStops = cabOrder.getStops()
-                .stream().map(Stop::getMinWaite)
+                .stream().map(Stop::getWaitTime)
                 .reduce(Integer::sum).orElse(0);
         return  LocalDateTime.of(cabOrder.getDatePickup(), cabOrder.getTimePickup())
-                    .plusMinutes(cabOrder.getMinDrive() + awaitTimeOnStops);
+                    .plusMinutes(cabOrder.getDriveTime() + awaitTimeOnStops);
     }
 
 }

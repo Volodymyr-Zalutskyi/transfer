@@ -20,7 +20,7 @@ public class CabOrderRequest {
     private LocalTime timePickup;
     @Positive
     @NotNull
-    private Integer minDrive;
+    private Integer driveTime;
 
     @NotNull
     private Long clientId;

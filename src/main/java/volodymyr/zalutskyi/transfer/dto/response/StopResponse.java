@@ -9,14 +9,14 @@ import volodymyr.zalutskyi.transfer.entity.Stop;
 public class StopResponse {
     private Long id;
     private String description;
-    private Integer minWaite;
+    private Integer waitTime;
     private AddressResponse address;
 
 
     public StopResponse(Stop stop){
         id = stop.getId();
         description = stop.getDescription();
-        minWaite = stop.getMinWaite();
+        waitTime = stop.getWaitTime();
         address = new AddressResponse(stop.getAddress());
     }
 }

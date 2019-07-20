@@ -11,6 +11,7 @@ import java.util.List;
 
 import static volodymyr.zalutskyi.transfer.tool.Constants.CLIENT_URL;
 
+@CrossOrigin
 @RestController
 @RequestMapping(CLIENT_URL)
 public class ClientController {

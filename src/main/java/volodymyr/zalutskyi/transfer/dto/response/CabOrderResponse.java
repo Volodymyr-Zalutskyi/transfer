@@ -26,7 +26,7 @@ public class CabOrderResponse {
     private List<StopResponse> stopResponses;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
     private LocalDateTime dateOfOrder;
-    private Integer minDrive;
+    private Integer driveTime;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalDateTime timeBack;
 
@@ -39,9 +39,9 @@ public class CabOrderResponse {
         cabResponses = new CabResponse(cabOrder.getCab());
         stopResponses = cabOrder.getStops().stream().map(StopResponse::new).collect(Collectors.toList());
         dateOfOrder = cabOrder.getDateOfOrder();
-        minDrive = cabOrder.getMinDrive();
-        timeBack = LocalDateTime.of(cabOrder.getDatePickup(), cabOrder.getTimePickup().plusMinutes(cabOrder.getMinDrive() + cabOrder.getStops()
-                .stream().map(Stop::getMinWaite)
+        driveTime = cabOrder.getDriveTime();
+        timeBack = LocalDateTime.of(cabOrder.getDatePickup(), cabOrder.getTimePickup().plusMinutes(cabOrder.getDriveTime() + cabOrder.getStops()
+                .stream().map(Stop::getWaitTime)
                 .reduce(Integer::sum).orElse(0)));
 
     }

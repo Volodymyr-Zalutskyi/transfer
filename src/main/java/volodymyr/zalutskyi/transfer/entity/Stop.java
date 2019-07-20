@@ -18,7 +18,7 @@ public class Stop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    private Integer minWaite;
+    private Integer waitTime;
     @OneToOne
     private Address address;
 

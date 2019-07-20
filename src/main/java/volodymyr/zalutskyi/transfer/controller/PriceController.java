@@ -11,6 +11,7 @@ import java.util.List;
 
 import static volodymyr.zalutskyi.transfer.tool.Constants.PRICE_URL;
 
+@CrossOrigin
 @RestController
 @RequestMapping(PRICE_URL)
 public class PriceController {

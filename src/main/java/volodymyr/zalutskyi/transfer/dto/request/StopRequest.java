@@ -13,7 +13,7 @@ public class StopRequest {
     private String description;
     @Positive
     @NotNull
-    private Integer minWaite;
+    private Integer waitTime;
 
 
     @NotNull

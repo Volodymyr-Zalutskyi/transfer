@@ -37,7 +37,7 @@ public class CabOrder {
 
     @Positive
     @NotNull
-    private Integer minDrive;
+    private Integer driveTime;
 
     @ManyToOne
     private Client client;

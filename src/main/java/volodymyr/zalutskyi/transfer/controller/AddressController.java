@@ -11,6 +11,7 @@ import java.util.List;
 
 import static volodymyr.zalutskyi.transfer.tool.Constants.ADDRESS_URL;
 
+@CrossOrigin
 @RestController
 @RequestMapping(ADDRESS_URL)
 public class AddressController {

@@ -13,6 +13,7 @@ import java.util.List;
 import static volodymyr.zalutskyi.transfer.tool.Constants.STOP_URL;
 import static volodymyr.zalutskyi.transfer.tool.Constants.STOP_URL;
 
+@CrossOrigin
 @RestController
 @RequestMapping(STOP_URL)
 public class StopController {
