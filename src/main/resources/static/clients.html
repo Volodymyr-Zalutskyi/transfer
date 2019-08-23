@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Client</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+<div id="create-client-modal" class="modal">
+    <div class="modal-content">
+
+        <div class="input-field col s12">
+            <select class="address-select">
+                <option disabled selected>Choose address</option>
+            </select>
+            <label>Address</label>
+        </div>
+
+        <div>
+        <input data-id="" id="client-input" type="text" placeholder="Client">
+        </div>
+
+        <div class="modal-footer">
+            <label for="client-submit">Added Client</label>
+            <button id="client-submit" class="btn waves-effect waves-light">Submit</button>
+        </div>
+
+    </div>
+</div>
+<div>
+    <button data-target="create-client-modal" class="add-client-btn btn modal-trigger">ADD CLIENT</button>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Client</th>
+        <th>Address</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+
+    <tbody id="clients">
+    </tbody>
+</table>
+
+
+<script>
+    let url = 'http://localhost:8080';
+
+
+    let $modal = $('#create-client-modal');
+    let $clientInput = $('#client-input');
+    let $addressSelect = $('.address-select');
+    $modal.modal();
+
+
+    $('#client-submit').click(() => {
+
+        let clientRequest = {
+            company: $clientInput.val(),
+            addressId: $addressSelect.val()
+        };
+        let id = $clientInput.attr('data-id');
+        if (id) {
+            $.ajax({
+                url: `${url}/client?id=${id}`,
+                type: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify(clientRequest),
+                success: () => {
+                    getClients();
+                },
+                error: logError
+            });
+        } else {
+            $.ajax({
+                url: `${url}/client`,
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(clientRequest),
+                success: () => {
+                    getClients();
+                },
+                error: logError
+            });
+        }
+        $modal.modal('close');
+
+        $clientInput.val('');
+        $clientInput.attr('data-id', '');
+        $addressSelect.prop('selectedIndex', 0);
+    });
+
+    let tableBody = $('#clients');
+    let appendClientToTable = (client) => {
+        tableBody.append(`
+            <tr>
+                <td>${client.id}</td>
+                <td class ="client-company">${client.company}</td>
+                <td class ="client-address">${client.address.city} ${client.address.street} ${client.address.buildingNumber}</td>
+                <td>
+                    <a data-id="${client.id}" class="delete-btn waves-effect waves-light btn-small">delete</a>
+                    <a data-id="${client.id}" class="update-btn waves-effect waves-light btn-small">update</a>
+                </td>
+            </tr>
+            `)
+    };
+
+    let actionOnDeleteButtons = () => {
+        $('.delete-btn').click((e) => {
+            let id = $(e.target).attr('data-id');
+            $.ajax({
+                url: `${url}/client?id=${id}`,
+                type: 'delete',
+                success: ()=> {
+                    $(e.target).closest('tr').hide()
+                }
+            })
+        })
+    };
+
+
+    let getClients = () => {
+        $.ajax({
+            url: `${url}/client`,
+            type: 'get',
+            success: (response) => {
+                tableBody.html('');
+                for (let client of response) {
+                    appendClientToTable(client);
+                }
+                actionOnDeleteButtons();
+            }
+        });
+    };
+
+    getClients();
+
+
+
+    let appendAddressToSelect = (address) => {
+        $addressSelect.append(
+            `<option value="${address.id}">${address.city} ${address.street} ${address.buildingNumber}
+             </option>`
+        )
+    };
+    let appendAddressesToSelect = (addresses) => {
+        for (let address of addresses) {
+            appendAddressToSelect(address);
+        }
+    };
+    let activateSelect = (addresses) => {
+        appendAddressesToSelect(addresses);
+        $('select').formSelect();
+    };
+    $(document).ready(function () {
+        let getAddressToSelect = () => {
+           $addressSelect.html('');
+            $.ajax({
+                url: `${url}/address`,
+                type: 'get',
+                success: activateSelect,
+                error: console.log
+            });
+
+        };
+        $('.add-client-btn').click(() => {
+            getAddressToSelect();
+        });
+
+    });
+
+    function logError(err) {
+        console.log(err)
+    }
+
+
+</script>
+</body>
+</html>

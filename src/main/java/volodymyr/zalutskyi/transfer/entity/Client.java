@@ -21,7 +21,7 @@ public class Client {
     private String company;
 
 
-    @OneToOne
+    @ManyToOne
     private Address address;
 
     @OneToMany(mappedBy = "client")

@@ -25,14 +25,18 @@ public class CabOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
+    private String nameOfClient;
+    private String phoneNumber;
+    private String emailAddress;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private LocalDate datePickup;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime timePickup;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime dateOfOrder;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime timeBack;
 
     @Positive
@@ -42,7 +46,7 @@ public class CabOrder {
     @ManyToOne
     private Client client;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "cabOrder" )
     private List<Stop> stops = new ArrayList<>();
 
     @ManyToOne

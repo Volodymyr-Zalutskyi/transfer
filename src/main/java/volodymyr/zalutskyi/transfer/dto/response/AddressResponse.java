@@ -10,12 +10,12 @@ public class AddressResponse {
     private Long id;
     private String city;
     private String street;
-    private String bildingNumber;
+    private String buildingNumber;
 
     public AddressResponse (Address address){
         id = address.getId();
         city = address.getCity();
         street = address.getStreet();
-        bildingNumber = address.getBildingNumber();
+        buildingNumber = address.getBuildingNumber();
     }
 }

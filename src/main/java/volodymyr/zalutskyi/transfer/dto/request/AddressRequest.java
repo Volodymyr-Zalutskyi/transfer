@@ -13,6 +13,6 @@ public class AddressRequest {
     private String city;
     @NotBlank
     private String street;
-    @NotNull
-    private String bildingNubmer;
+    @NotBlank
+    private String buildingNumber;
 }

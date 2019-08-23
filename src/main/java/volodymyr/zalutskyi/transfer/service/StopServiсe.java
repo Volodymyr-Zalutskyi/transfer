@@ -16,10 +16,6 @@ public class StopServiсe {
     @Autowired
     private StopRepository stopRepository;
 
-    @Autowired
-    private AddressService addressService;
-
-
     public void create(StopRequest request){
         stopRepository.save(stopRequestToStop(null, request));
     }
@@ -49,9 +45,9 @@ public class StopServiсe {
         if(stop == null){
             stop = new Stop();
         }
+        stop.setAddressStop(request.getAddressStop());
         stop.setDescription(request.getDescription());
         stop.setWaitTime(request.getWaitTime());
-        stop.setAddress(addressService.findOne(request.getAddressId()));
         return stop;
     }
 

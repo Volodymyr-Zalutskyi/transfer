@@ -43,7 +43,7 @@ public class AddressService {
         }
         address.setCity(request.getCity());
         address.setStreet(request.getStreet());
-        address.setBildingNumber(request.getBildingNubmer());
+        address.setBuildingNumber(request.getBuildingNumber());
         return address;
     }
 }

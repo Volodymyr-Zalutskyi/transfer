@@ -10,12 +10,10 @@ import javax.validation.constraints.Positive;
 @Setter
 public class StopRequest {
     @NotNull
+    private String addressStop;
+    @NotNull
     private String description;
     @Positive
     @NotNull
     private Integer waitTime;
-
-
-    @NotNull
-    private Long addressId;
 }

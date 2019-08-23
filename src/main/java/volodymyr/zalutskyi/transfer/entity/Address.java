@@ -1,8 +1,11 @@
 package volodymyr.zalutskyi.transfer.entity;
 
 import lombok.*;
+import org.hibernate.mapping.ToOne;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,11 +20,8 @@ public class Address {
     private Long id;
     private String city;
     private String street;
-    private String bildingNumber;
+    private String buildingNumber;
 
-    @OneToOne(mappedBy = "address")
-    private Stop stops ;
-
-    @OneToOne(mappedBy = "address")
-    private Client client;
+    @OneToMany(mappedBy = "address")
+    private List<Client> clients = new ArrayList<>();
 }

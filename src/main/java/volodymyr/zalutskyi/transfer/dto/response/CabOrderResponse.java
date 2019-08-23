@@ -17,22 +17,28 @@ import java.util.stream.Collectors;
 @Setter
 public class CabOrderResponse {
     private Long id;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
+    private String nameOfClient;
+    private String phoneNumber;
+    private String emailAddress;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private LocalDate datePickup;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime timePickup;
     private ClientResponse clientResponses;
     private CabResponse cabResponses;
     private List<StopResponse> stopResponses;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime dateOfOrder;
     private Integer driveTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime timeBack;
 
 
     public CabOrderResponse(CabOrder cabOrder){
         id = cabOrder.getId();
+        nameOfClient = cabOrder.getNameOfClient();
+        phoneNumber = cabOrder.getPhoneNumber();
+        emailAddress = cabOrder.getEmailAddress();
         datePickup = cabOrder.getDatePickup();
         timePickup = cabOrder.getTimePickup();
         clientResponses = new ClientResponse(cabOrder.getClient());

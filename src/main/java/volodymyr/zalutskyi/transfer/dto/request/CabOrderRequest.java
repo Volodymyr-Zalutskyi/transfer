@@ -14,7 +14,13 @@ import java.util.List;
 @Getter
 @Setter
 public class CabOrderRequest {
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
+
+    @NotNull
+    private String nameOfClient;
+    @NotNull
+    private String phoneNumber;
+    private String emailAddress;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate datePickup;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime timePickup;
@@ -24,8 +30,8 @@ public class CabOrderRequest {
 
     @NotNull
     private Long clientId;
-    @NotEmpty
-    private List<Long> stopIds;
+    //@NotEmpty
+    private List<StopRequest> stops;
     @NotNull
     private Long cabId;
 }

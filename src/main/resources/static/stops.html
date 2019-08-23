@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stop</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Time waiting</th>
+        <th>Description of trip</th>
+        <th>Address</th>
+    </tr>
+    </thead>
+
+    <tbody id="stops">
+    </tbody>
+</table>
+
+<script>
+    const URL = 'http://localhost:8080';
+    $(document).ready(function() {
+
+        let tableBody = $('#stops');
+        let appendStopToTable = (stop) => {
+            tableBody.append(`
+            <tr>
+                <td>${stop.id}</td>
+                <td class="stop-waite">${stop.waitTime} minutes</td>
+                <td class="stop-description">${stop.description}</td>
+                <td class="stop-address">${stop.addressStop}</td>
+            </tr>
+            `);
+        };
+
+        let stopResponse = (response) => {
+            for(let stop of response){
+                appendStopToTable(stop);
+            }
+        };
+        let getStop = () => {
+            $.ajax({
+                url: `${URL}/stop`,
+                type: 'get',
+                success: stopResponse,
+                error: console.log
+            });
+        };
+
+        getStop();
+    });
+
+</script>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import volodymyr.zalutskyi.transfer.entity.Client;
 
+
 @Getter
 @Setter
 public class ClientResponse {

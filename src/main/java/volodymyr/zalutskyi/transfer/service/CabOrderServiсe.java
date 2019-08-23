@@ -6,11 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import volodymyr.zalutskyi.transfer.dto.request.CabOrderRequest;
 import volodymyr.zalutskyi.transfer.dto.request.PaginationRequest;
+import volodymyr.zalutskyi.transfer.dto.request.StopRequest;
 import volodymyr.zalutskyi.transfer.dto.response.CabOrderResponse;
 import volodymyr.zalutskyi.transfer.dto.response.PageResponse;
 import volodymyr.zalutskyi.transfer.entity.CabOrder;
 import volodymyr.zalutskyi.transfer.entity.Stop;
 import volodymyr.zalutskyi.transfer.repository.CabOrderRepository;
+import volodymyr.zalutskyi.transfer.repository.StopRepository;
 
 
 import java.time.LocalDate;
@@ -29,13 +31,14 @@ public class CabOrderServiсe {
     private ClientService clientService;
 
     @Autowired
-    private StopServiсe stopServiсe;
+    private StopRepository stopRepository;
 
     @Autowired
     private CabService cabService;
 
     public void creat(CabOrderRequest request) {
-        cabOrderRepository.save(cabOrderRequestToCabOrder(null, request));
+        CabOrder cabOrder = cabOrderRepository.save(cabOrderRequestToCabOrder(null, request));
+        saveStopsForCarOrder(cabOrder, request);
     }
 
     public List<CabOrderResponse> findAll(){
@@ -73,6 +76,9 @@ public class CabOrderServiсe {
             cabOrder = new CabOrder();
             cabOrder.setDateOfOrder(LocalDateTime.now());
         }
+            cabOrder.setNameOfClient(request.getNameOfClient());
+            cabOrder.setPhoneNumber(request.getPhoneNumber());
+            cabOrder.setEmailAddress(request.getEmailAddress());
             cabOrder.setDatePickup(request.getDatePickup());
             cabOrder.setTimePickup(request.getTimePickup());
             cabOrder.setDriveTime(request.getDriveTime());
@@ -83,14 +89,29 @@ public class CabOrderServiсe {
             cabOrder.setTimePickup(request.getTimePickup());
             cabOrder.setCab(cabService.findOne(request.getCabId()));
             cabOrder.setClient(clientService.findOne(request.getClientId()));
-            if (request.getStopIds() != null) {
-                cabOrder.setStops(request.getStopIds()
-                        .stream()
-                        .map(stopServiсe::findOne)
-                        .collect(Collectors.toList()));
-                cabOrder.setTimeBack(calculateEndTime(cabOrder));
-            }
+//            if (request.getStopRequests() != null) {
+//                cabOrder.setStops(request.getStopRequests()
+//                        .stream()
+//                        .map(stopRequests::findOne)
+//                        .collect(Collectors.toList()));
+//           }
+            cabOrder.setTimeBack(calculateEndTime(cabOrder));
+
         return cabOrder;
+    }
+
+   private void saveStopsForCarOrder(CabOrder cabOrder, CabOrderRequest request){
+        List<Stop> stops = request.getStops().stream().map(p -> stopRequestToCabOrder(cabOrder, p)).collect(Collectors.toList());
+        stopRepository.saveAll(stops);
+   }
+
+    private Stop stopRequestToCabOrder (CabOrder cabOrder, StopRequest request){
+      return Stop.builder()
+              .addressStop(request.getAddressStop())
+              .description(request.getDescription())
+              .waitTime(request.getWaitTime())
+              .cabOrder(cabOrder)
+              .build();
     }
 
     private LocalDateTime calculateEndTime(CabOrder cabOrder) {

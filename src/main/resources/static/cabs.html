@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cab</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body>
+<div id="create-cab-modal" class="modal">
+    <div class="modal-content">
+        <input data-id="" id="cab-typeOfCab-input" type="text" placeholder="Type of car">
+        <input id="cab-amountForOneKm-input" type="text" placeholder="Amount for one km">
+    </div>
+    <div class="modal-footer">
+        <label>Added Car</label>
+        <button id="cab-submit" class="btn waves-effect waves-light" >Submit</button>
+    </div>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Type of car</th>
+        <th>Amount for one km</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+
+    <tbody id="cabs">
+    </tbody>
+</table>
+<button data-target="create-cab-modal" class="btn modal-trigger">ADD CAR</button>
+
+<script>
+    let URL = 'http://localhost:8080';
+
+    $(document).ready(function(){
+        let $modal = $('#create-cab-modal');
+        let $typeOfCabInput = $('#cab-typeOfCab-input');
+        let $amountForOneKmInput = $('#cab-amountForOneKm-input');
+        $modal.modal({
+            onCloseStart: () => {
+                $typeOfCabInput.val('');
+                $amountForOneKmInput.val('');
+                $typeOfCabInput.attr('data-id', '');
+            }
+        });
+
+
+        $('#cab-submit').click(() => {
+            let cabRequest = {
+                typeOfCab: $typeOfCabInput.val(),
+                amountForOneKm: $amountForOneKmInput.val()
+            };
+            let id = $typeOfCabInput.attr('data-id');
+            if(id) {
+                $.ajax({
+                    url: `${URL}/cab?id=${id}`,
+                    type: 'put',
+                    contentType: 'application/json',
+                    data: JSON.stringify(cabRequest),
+                    success: function () {
+                        getCabs();
+                    },
+                    error: console.log
+                });
+            } else{
+                $.ajax({
+                    url: `${URL}/cab`,
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(cabRequest),
+                    success: function () {
+                        getCabs();
+                    },
+                    error: console.log
+                });
+            }
+            $modal.modal('close');
+        });
+        let tableBody = $('#cabs');
+        let appendCabToTable = (cab) =>{
+            tableBody.append(`
+         <tr>
+            <td>${cab.id}</td>
+            <td class ="cab-typeOfCab">${cab.typeOfCab}</td>
+            <td class ="cab-amountForOneKm">${cab.amountForOneKm}</td>
+            <td>
+                <a data-id="${cab.id}" class="delete-btn waves-effect waves-light btn-small">delete</a>
+                <a data-id="${cab.id}" class="update-btn waves-effect waves-light btn-small">update</a>
+            </td>
+         </tr>
+        `);
+        };
+
+        let actionOnDeleteButtons = () => {
+            $('.delete-btn').click((e) => {
+                let $btn = $(e.target);
+                let id = $btn.attr('data-id');
+                $.ajax({
+                    url: `${URL}/cab?id=${id}`,
+                    type: 'delete',
+                    success: () => {
+                        $btn.closest('tr').hide()
+                    }
+                });
+            });
+        };
+
+        let actionOnUpdateButtons = () => {
+            $('.update-btn').click((e) => {
+                let $btn = $(e.target);
+                let id = $btn.attr('data-id');
+
+                $typeOfCabInput.val($btn.parent().siblings('.cab-typeOfCab').html()),
+                $amountForOneKmInput.val($btn.parent().siblings('.cab-amountForOneKm').html())
+                $typeOfCabInput.attr('data-id', id);
+                $modal.modal('open');
+            });
+        };
+
+        let getCabs = () => {
+            tableBody.html('');
+            $.ajax({
+                url: `${URL}/cab`,
+                type: 'get',
+                success: (response) => {
+                    for (let taxi of response) {
+                        appendCabToTable(taxi);
+                    }
+                    actionOnDeleteButtons();
+                    actionOnUpdateButtons();
+                }
+            });
+        };
+        getCabs();
+    });
+</script>
+
+
+</body>
+</html>

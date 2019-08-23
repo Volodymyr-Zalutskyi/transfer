@@ -9,12 +9,12 @@ import volodymyr.zalutskyi.transfer.service.CabService;
 import javax.validation.Valid;
 import java.util.List;
 
-import static volodymyr.zalutskyi.transfer.tool.Constants.PRICE_URL;
+import static volodymyr.zalutskyi.transfer.tool.Constants.CAB_URL;
 
 @CrossOrigin
 @RestController
-@RequestMapping(PRICE_URL)
-public class PriceController {
+@RequestMapping(CAB_URL)
+public class CabController {
 
     @Autowired
     private CabService cabService;
